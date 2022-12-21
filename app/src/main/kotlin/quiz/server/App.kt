@@ -3,13 +3,29 @@
  */
 package quiz.server
 
-class App {
-    val greeting: String
-        get() {
-            return "Hello World!"
-        }
-}
+import io.ktor.server.application.Application
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.request.*
+import io.ktor.server.routing.*
 
 fun main() {
-    println(App().greeting)
+    embeddedServer(Netty, port = 8080, host = "127.0.0.1", module = Application::module)
+        .start(wait = true)
+}
+
+private fun Application.module() {
+    install(ContentNegotiation) {
+        json()
+    }
+    
+	routing {
+        get("/test") {
+            call.respond(mapOf("hello" to "world"))
+        }
+    }    
 }
