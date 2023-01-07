@@ -3,12 +3,26 @@
  */
 package quiz.server
 
+import configureSerialization
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.testApplication
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import quiz.server.plugins.configureCommonRouting
 
 class AppTest {
-    @Test fun appHasAGreeting() {
-        val classUnderTest = App()
-        assertNotNull(classUnderTest.greeting, "app should have a greeting")
+    @Test
+    fun testRoot() = testApplication {
+        application {
+            configureCommonRouting()
+            configureSerialization()
+        }
+        client.get("http://127.0.0.1:8080/test").apply {
+            assertEquals(HttpStatusCode.OK, status)
+            assertEquals("{\"hello\":\"world\"}", bodyAsText())
+        }
     }
 }
