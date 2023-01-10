@@ -7,11 +7,11 @@ import configureSerialization
 import io.ktor.server.application.Application
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import quiz.server.dao.DatabaseFactory
+import quiz.server.db.DatabaseFactory
 import quiz.server.plugins.configureCommonRouting
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "127.0.0.1", module = Application::module)
+    embeddedServer(Netty, port = 8080, host = "192.168.10.3", module = Application::module)
         .start(wait = true)
 }
 

@@ -7,23 +7,62 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
-import quiz.server.dao.QuestionDAO
-import quiz.server.dao.QuestionDAOImpl
+import quiz.server.db.dao.AnswerDAO
+import quiz.server.db.dao.QuestionDAO
+import quiz.server.model.QuestionWithAnswers
 
 fun Application.configureCommonRouting() {
-    val dao: QuestionDAO = QuestionDAOImpl()
+    val questionDao = QuestionDAO()
+    val answerDao = AnswerDAO()
 
     routing {
         get("/test") {
             call.respond(mapOf("hello" to "world"))
         }
 
-        get("/question/{id}") {
-            val id = call.parameters.getOrFail<Long>("id").toLong()
-            val question = dao.question(id)
+        get("/randomquestion") {
+            val question = questionDao.randomQuestion()
 
             if (question != null) {
-                call.respond(question)
+                val answers = answerDao.questionAnswers(question.id)
+
+                val questionWithAnswers = QuestionWithAnswers(
+                    id = question.id,
+                    text = question.text,
+                    answers = answers,
+                )
+
+                call.respond(questionWithAnswers)
+            } else {
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        get("/question/{id}") {
+            val id = call.parameters.getOrFail("id").toLong()
+            val question = questionDao.question(id)
+
+            if (question != null) {
+                val answers = answerDao.questionAnswers(question.id)
+
+                val questionWithAnswers = QuestionWithAnswers(
+                    id = question.id,
+                    text = question.text,
+                    answers = answers,
+                )
+
+                call.respond(questionWithAnswers)
+            } else {
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        get("/question/{id}/answers") {
+            val id = call.parameters.getOrFail("id").toLong()
+            val answers = answerDao.questionAnswers(id)
+
+            if (answers.isNotEmpty()) {
+                call.respond(answers)
             } else {
                 call.respond(HttpStatusCode.NotFound)
             }
