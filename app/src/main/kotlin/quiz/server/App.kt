@@ -3,21 +3,27 @@
  */
 package quiz.server
 
-import configureSerialization
-import io.ktor.server.application.Application
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import quiz.server.db.DatabaseFactory
-import quiz.server.plugins.configureCommonRouting
+import db.DatabaseFactory
+import db.dao.AnswerDAO
+import db.dao.QuestionDAO
+import db.repository.QuizRepositoryImpl
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.dsl.module
+import quiz.server.repository.QuizRepository
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "192.168.10.3", module = Application::module)
-        .start(wait = true)
-}
+    startKoin {
+        modules(appModule)
+    }
 
-private fun Application.module() {
     DatabaseFactory.init()
 
-    configureSerialization()
-    configureCommonRouting()
+    startServer()
+}
+
+val appModule = module {
+    single<QuizRepository> { QuizRepositoryImpl(get(), get()) }
+
+    single{ QuestionDAO() }
+    single{ AnswerDAO() }
 }

@@ -9,5 +9,8 @@
  */
 
 rootProject.name = "quiz-server"
+
 include("app")
+include("presentation")
 include("model")
+include("data")

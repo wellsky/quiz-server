@@ -1,10 +1,10 @@
-package quiz.server.db.dao
+package db.dao
 
+import db.DatabaseFactory.dbQuery
+import db.table.AnswersTable
 import org.jetbrains.exposed.sql.Random
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.select
-import quiz.server.db.DatabaseFactory.dbQuery
-import quiz.server.db.table.AnswersTable
 import quiz.server.model.Answer
 
 class AnswerDAO {

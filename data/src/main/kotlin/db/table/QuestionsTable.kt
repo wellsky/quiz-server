@@ -1,4 +1,4 @@
-package quiz.server.db.table
+package db.table
 
 import org.jetbrains.exposed.sql.Table
 
