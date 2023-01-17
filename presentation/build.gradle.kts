@@ -33,9 +33,6 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
-    // FreeMarker templates
-    implementation("io.ktor:ktor-server-freemarker:$ktor_version")
-
     // Ktor tests
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

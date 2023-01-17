@@ -3,11 +3,14 @@ package quiz.server.plugins
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import org.koin.ktor.ext.inject
-
+import quiz.server.model.AnswerAttemptRequest
+import quiz.server.model.AnswerAttemptResponse
 import quiz.server.repository.QuizRepository
 
 fun Application.configureCommonRouting() {
@@ -26,6 +29,16 @@ fun Application.configureCommonRouting() {
             } else {
                 call.respond(HttpStatusCode.NotFound)
             }
+        }
+
+        post("/answer") {
+            val answerAttemptRequest = call.receive<AnswerAttemptRequest>()
+
+            call.respond(AnswerAttemptResponse(
+                questionId = answerAttemptRequest.questionId,
+                answerId = answerAttemptRequest.answerId,
+                correct = false,
+            ))
         }
 
 //        get("/question/{id}") {
